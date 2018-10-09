@@ -50,7 +50,8 @@ public class YandexAds extends CordovaPlugin {
 	@Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
-		mAdView = (AdView) findViewById(R.id.banner_view);
+		mAdView = new AdView(cordova.getActivity());
+		mAdView. setAutoRefreshEnabled(false);
 		initBannerView(null, null);
 		refreshBannerAd();
 	}
