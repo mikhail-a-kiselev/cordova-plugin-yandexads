@@ -70,7 +70,6 @@ public class YandexAds extends CordovaPlugin {
 			return true;
         }
         else if(REFRESH_BANNER_AD.equals(action)){
-        	//JSONObject options = inputs.optJSONObject(0);
             refreshBannerAd();
 			return true;
         }
@@ -103,11 +102,18 @@ public class YandexAds extends CordovaPlugin {
 		* R-M-DEMO-320x100-context for AdSize.BANNER_320x100
         * R-M-DEMO-728x90 for AdSize.BANNER_728x90
         */
-        mAdView.setBlockId("R-M-DEMO-320x50");//blockId
-        mAdView.setAdSize(AdSize.BANNER_320x50);
+        cordova.getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+            	mAdView.setBlockId("R-M-DEMO-320x50");//blockId
+            	mAdView.setAdSize(AdSize.BANNER_320x50);
 
-        mAdRequest = AdRequest.builder().build();
-        mAdView.setAdEventListener(mBannerAdEventListener);
+            	mAdRequest = AdRequest.builder().build();
+            	mAdView.setAdEventListener(mBannerAdEventListener);
+            //	Log.i("YA_", "after initialization");
+            	
+            }
+		});
         
         return null;
     }
@@ -117,15 +123,45 @@ public class YandexAds extends CordovaPlugin {
             refreshBannerAd();
         }
     };
-
     private void refreshBannerAd() {
-        mAdView.setVisibility(View.INVISIBLE);
-        mAdView.loadAd(mAdRequest);
+        cordova.getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+            	mAdView.setVisibility(View.INVISIBLE);
+            	mAdView.loadAd(mAdRequest);
+            }
+    	});
+    }
+	    private void showBannerView(){
+    	cordova.getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+            	mAdView.setVisibility(View.VISIBLE);
+            }
+    	});
+    }
+    private void hideBannerView(){
+    	cordova.getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+            	mAdView.setVisibility(View.INVISIBLE);
+            }
+    	});
     }
 	private AdEventListener mBannerAdEventListener = new AdEventListener.SimpleAdEventListener() {
         @Override
         public void onAdLoaded() {
             mAdView.setVisibility(View.VISIBLE);
+			webView.loadUrl(String.format(
+                    "javascript:cordova.fireDocumentEvent('onSuccessReceiveYandexAd', { });" 
+            ));
+        }
+		@Override
+        public void onAdFailedToLoad(final AdRequestError error){
+        	webView.loadUrl(String.format(
+                    "javascript:cordova.fireDocumentEvent('onFailedToReceiveYandexAd', { 'code': %d, 'description':'%s' });",
+                    error.getCode(), error.getDescription()
+             ));
         }
     };
 }
