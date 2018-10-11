@@ -52,13 +52,14 @@ public class YandexAds extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		mAdView = new AdView(cordova.getActivity());
+		RelativeLayout adswrapper = new RelativeLayout(cordova.getActivity());
+		final RelativeLayout.LayoutParams wraperLayoutParams = new RelativeLayout.LayoutParams(android.widget.RadioGroup.LayoutParams.MATCH_PARENT, android.widget.ActionMenuView.LayoutParams.MATCH_PARENT);
 		final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RadioGroup.LayoutParams.MATCH_PARENT, android.widget.ActionMenuView.LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		cordova.getActivity().addContentView(mAdView, layoutParams);
+		cordova.getActivity().addContentView(adswrapper, wraperLayoutParams);
+		adswrapper.addView(mAdView, layoutParams);
 		mAdView. setAutoRefreshEnabled(false);
 		mAdView.bringToFront();
-		//initBannerView(null, null);
-		//refreshBannerAd();
 	}
 	
 	@Override
