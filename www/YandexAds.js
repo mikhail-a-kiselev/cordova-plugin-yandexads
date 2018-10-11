@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
-exports.initBannerView = function(){
+exports.initBannerView = function(opt){
 		//alert('ibv');
 		cordova.exec(
             function(winParam) {
@@ -10,7 +10,7 @@ exports.initBannerView = function(){
 			},
             "YandexAds",
             "initBannerView",
-            []);
+            [opt]);
 	};
 	
 exports.refreshBannerAd = function(){
