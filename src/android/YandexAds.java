@@ -1,6 +1,6 @@
 package com.codemech.yandexads;
 
-import android.R;
+//import android.R;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
 //import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.apache.cordova.CallbackContext;
@@ -51,9 +52,13 @@ public class YandexAds extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		mAdView = new AdView(cordova.getActivity());
+		final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RadioGroup.LayoutParams.MATCH_PARENT, android.widget.ActionMenuView.LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		cordova.getActivity().addContentView(mAdView, layoutParams);
 		mAdView. setAutoRefreshEnabled(false);
-		initBannerView(null, null);
-		refreshBannerAd();
+		mAdView.bringToFront();
+		//initBannerView(null, null);
+		//refreshBannerAd();
 	}
 	
 	@Override
