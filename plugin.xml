@@ -11,7 +11,10 @@
 			<param name="onload" value="true" />
 		</feature>
 	</config-file>
-	<config-file parent="/*" target="AndroidManifest.xml"></config-file>
+	<config-file parent="/manifest/application" target="AndroidManifest.xml">
+		<activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.yandex.mobile.ads.AdView" android:theme="@android:style/Theme.Translucent" />
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.yandex.mobile.ads.AdActivity" />
+	</config-file>
 	<source-file src="src/android/YandexAds.java" target-dir="src/com/codemech/yandexads" />
 </platform>
 </plugin>
