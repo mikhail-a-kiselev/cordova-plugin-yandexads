@@ -26,3 +26,42 @@ exports.refreshBannerAd = function(){
             "refreshBannerAd",
             []);
 	};
+exports.loadAd = function(){
+		//alert('rba');
+		cordova.exec(
+            function(winParam) {
+				
+			},
+            function(error) {
+				
+			},
+            "YandexAds",
+            "loadAd",
+            []);
+	};
+exports.showView = function(){
+		//alert('rba');
+		cordova.exec(
+            function(winParam) {
+				
+			},
+            function(error) {
+				
+			},
+            "YandexAds",
+            "showView",
+            []);
+	};
+exports.hideView = function(){
+		//alert('rba');
+		cordova.exec(
+            function(winParam) {
+				
+			},
+            function(error) {
+				
+			},
+            "YandexAds",
+            "hideView",
+            []);
+	};
