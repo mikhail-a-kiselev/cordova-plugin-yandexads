@@ -105,7 +105,11 @@ public class YandexAds extends CordovaPlugin {
         cordova.getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run() {
-            	mAdView.setBlockId("R-M-DEMO-320x50");//blockId
+            	if(options != null && options.has("bannerId")){
+            		mAdView.setBlockId(options.optString("bannerId"));
+            	} else {
+            		mAdView.setBlockId("R-M-DEMO-320x50");//blockId
+            	}
             	mAdView.setAdSize(AdSize.BANNER_320x50);
 
             	mAdRequest = AdRequest.builder().build();
