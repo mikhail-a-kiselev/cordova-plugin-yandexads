@@ -79,11 +79,11 @@ public class YandexAds extends CordovaPlugin {
 			return true;
         }
         else if(SHOW_VIEW.equals(action)){
-        	mAdView.setVisibility(View.VISIBLE);
+        	showBannerView();
 			return true;
         }
         else if(HIDE_VIEW.equals(action)){
-        	mAdView.setVisibility(View.INVISIBLE);
+        	hideBannerView();
 			return true;
         } else {
 			return false;
