@@ -70,8 +70,8 @@ public class YandexAds extends CordovaPlugin {
 			return true;
         }
         else if(REFRESH_BANNER_AD.equals(action)){
-        	JSONObject options = inputs.optJSONObject(0);
-            result = initBannerView(options, callbackContext);
+        	//JSONObject options = inputs.optJSONObject(0);
+            refreshBannerAd();
 			return true;
         }
         else if(LOAD_AD.equals(action)){
