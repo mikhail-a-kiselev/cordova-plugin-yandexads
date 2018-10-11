@@ -90,7 +90,7 @@ public class YandexAds extends CordovaPlugin {
         
         
 	}
-	private PluginResult initBannerView(JSONObject options, CallbackContext context) {
+	private PluginResult initBannerView(final JSONObject options, CallbackContext context) {
         /*
         * Replace demo R-M-DEMO-320x50 with actual Block ID
         * Following demo Block IDs may be used for testing:
