@@ -26,6 +26,8 @@ import com.yandex.mobile.ads.AdRequest;
 import com.yandex.mobile.ads.AdRequestError;
 import com.yandex.mobile.ads.AdSize;
 import com.yandex.mobile.ads.AdView;
+import com.yandex.mobile.ads.InterstitialAd;
+import com.yandex.mobile.ads.InterstitialEventListener;
 import com.yandex.mobile.ads.nativeads.NativeAdAssets;
 import com.yandex.mobile.ads.nativeads.NativeAdEventListener;
 import com.yandex.mobile.ads.nativeads.NativeAdException;
@@ -42,16 +44,21 @@ public class YandexAds extends CordovaPlugin {
 	private static final String INIT_BANNER_VIEW = "initBannerView"; 
 	private static final String REFRESH_BANNER_AD = "refreshBannerAd";
 	private static final String LOAD_AD = "loadAd";
+	private static final String LOAD_INTERSTITIAL = "loadInterstitial";
 	private static final String SHOW_VIEW = "showView";
 	private static final String HIDE_VIEW = "hideView";
 	
 	private AdView mAdView;
     private AdRequest mAdRequest;
 	
+    private InterstitialAd mInterstitialAd;
+    private AdRequest mIAdRequest;
+	
 	@Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		mAdView = new AdView(cordova.getActivity());
+		mInterstitialAd = new InterstitialAd(cordova.getActivity());
 		RelativeLayout adswrapper = new RelativeLayout(cordova.getActivity());
 		final RelativeLayout.LayoutParams wraperLayoutParams = new RelativeLayout.LayoutParams(android.widget.RadioGroup.LayoutParams.MATCH_PARENT, android.widget.ActionMenuView.LayoutParams.MATCH_PARENT);
 		final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RadioGroup.LayoutParams.MATCH_PARENT, android.widget.ActionMenuView.LayoutParams.WRAP_CONTENT);
@@ -77,6 +84,10 @@ public class YandexAds extends CordovaPlugin {
         else if(LOAD_AD.equals(action)){
         	mAdView.loadAd(mAdRequest);
 			return true;
+        }
+		else if(LOAD_INTERSTITIAL.equals(action)){
+        	loadInterstitial();
+        	return true;
         }
         else if(SHOW_VIEW.equals(action)){
         	showBannerView();
@@ -111,10 +122,18 @@ public class YandexAds extends CordovaPlugin {
             	} else {
             		mAdView.setBlockId("R-M-DEMO-320x50");//blockId
             	}
+				if(options != null && options.has("interstitialId")){
+            		mInterstitialAd.setBlockId(options.optString("interstitialId"));
+            	} else {
+            		mInterstitialAd.setBlockId("R-M-DEMO-320x480");
+            	}
             	mAdView.setAdSize(AdSize.BANNER_320x50);
 
             	mAdRequest = AdRequest.builder().build();
+				mIAdRequest = AdRequest.builder().build();
+				
             	mAdView.setAdEventListener(mBannerAdEventListener);
+				mInterstitialAd.setInterstitialEventListener(mInterstitialAdEventListener);
             //	Log.i("YA_", "after initialization");
             	
             }
@@ -137,7 +156,16 @@ public class YandexAds extends CordovaPlugin {
             }
     	});
     }
-	    private void showBannerView(){
+	private void loadInterstitial(){
+    	cordova.getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+            	mInterstitialAd.loadAd(mIAdRequest);
+            }
+    	});
+    }
+	
+	private void showBannerView(){
     	cordova.getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run() {
@@ -165,6 +193,25 @@ public class YandexAds extends CordovaPlugin {
         public void onAdFailedToLoad(final AdRequestError error){
         	webView.loadUrl(String.format(
                     "javascript:cordova.fireDocumentEvent('onFailedToReceiveYandexAd', { 'code': %d, 'description':'%s' });",
+                    error.getCode(), error.getDescription()
+             ));
+        }
+    };
+	
+	private InterstitialEventListener mInterstitialAdEventListener = new InterstitialEventListener.SimpleInterstitialEventListener() {
+
+        @Override
+        public void onInterstitialLoaded() {
+            mInterstitialAd.show();
+            webView.loadUrl(String.format(
+                    "javascript:cordova.fireDocumentEvent('onSuccessReceiveYandexInterstitial', { });" 
+            ));
+        }
+
+        @Override
+        public void onInterstitialFailedToLoad(AdRequestError error) {
+            webView.loadUrl(String.format(
+                    "javascript:cordova.fireDocumentEvent('onFailedToReceiveYandexInterstitial', { 'code': %d, 'description':'%s' });",
                     error.getCode(), error.getDescription()
              ));
         }

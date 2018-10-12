@@ -39,6 +39,19 @@ exports.loadAd = function(){
             "loadAd",
             []);
 	};
+exports.loadInterstitial = function(){
+		//alert('rba');
+		cordova.exec(
+            function(winParam) {
+				
+			},
+            function(error) {
+				
+			},
+            "YandexAds",
+            "loadInterstitial",
+            []);
+	};
 exports.showView = function(){
 		//alert('rba');
 		cordova.exec(
