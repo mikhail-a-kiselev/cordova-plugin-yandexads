@@ -54,6 +54,8 @@ public class YandexAds extends CordovaPlugin {
     private InterstitialAd mInterstitialAd;
     private AdRequest mIAdRequest;
 	
+	private boolean inited = false;
+	
 	@Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
@@ -117,24 +119,29 @@ public class YandexAds extends CordovaPlugin {
         cordova.getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run() {
-            	if(options != null && options.has("bannerId")){
-            		mAdView.setBlockId(options.optString("bannerId"));
-            	} else {
-            		mAdView.setBlockId("R-M-DEMO-320x50");//blockId
-            	}
-				if(options != null && options.has("interstitialId")){
-            		mInterstitialAd.setBlockId(options.optString("interstitialId"));
-            	} else {
-            		mInterstitialAd.setBlockId("R-M-DEMO-320x480");
-            	}
-            	mAdView.setAdSize(AdSize.BANNER_320x50);
+				if(inited==true){
+					
+				} else {
+					if(options != null && options.has("bannerId")){
+						mAdView.setBlockId(options.optString("bannerId"));
+					} else {
+						mAdView.setBlockId("R-M-DEMO-320x50");//blockId
+					}
+					if(options != null && options.has("interstitialId")){
+						mInterstitialAd.setBlockId(options.optString("interstitialId"));
+					} else {
+						mInterstitialAd.setBlockId("R-M-DEMO-320x480");
+					}
+					mAdView.setAdSize(AdSize.BANNER_320x50);
 
-            	mAdRequest = AdRequest.builder().build();
-				mIAdRequest = AdRequest.builder().build();
+					mAdRequest = AdRequest.builder().build();
+					mIAdRequest = AdRequest.builder().build();
 				
-            	mAdView.setAdEventListener(mBannerAdEventListener);
-				mInterstitialAd.setInterstitialEventListener(mInterstitialAdEventListener);
-            //	Log.i("YA_", "after initialization");
+					mAdView.setAdEventListener(mBannerAdEventListener);
+					mInterstitialAd.setInterstitialEventListener(mInterstitialAdEventListener);
+					inited = true;
+				}
+
             	
             }
 		});
